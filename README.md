@@ -1,4 +1,4 @@
-# Dynamo Api v1
+# Dynamo API (v1)
 
 This is a pubic API to Dynamo Software's Dynamo (http://www.dynamosoftware.com/).
 
