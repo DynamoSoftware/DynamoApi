@@ -76,7 +76,7 @@ GetDocuments
 Returns a zip file for the specified document ids. 
 
    * Method: GET
-   * URL: /v1/GetDocuments?docIds=<code>document id</code>
+   * URL: /v1/GetDocuments?docIds=<code>document ids</code>
    * Response: the zip file
 
 Execute Command
