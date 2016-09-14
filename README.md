@@ -73,7 +73,7 @@ Returns a file for the specified document id.
 
 GetDocuments
 --------
-Returns a zip file for the specified document ids. 
+Returns a zip file for the specified document ids(semicolon separated). 
 
    * Method: GET
    * URL: /v1/GetDocuments?docIds=<code>document ids</code>
