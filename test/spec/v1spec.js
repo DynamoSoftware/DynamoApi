@@ -364,7 +364,7 @@ describe("download - ", function () {
 
         var item = {
             es: 'Document',
-            id: '6f7cff0e-fd17-4251-9a1a-0e37e5ef604b'
+            id: '1dcded01-9b17-48e3-9180-495e4ee54f39'
         };
         var dest_dir = './downloads/';
 
@@ -383,6 +383,59 @@ describe("download - ", function () {
                 var contentDispositionHeader = contentDisposition.parse(response.headers['content-disposition'].toString());
                 var file_name = contentDispositionHeader.parameters['filename'];
 
+                var dest = dest_dir + file_name;
+
+                var writeStream = fs.createWriteStream(dest);
+
+                writeStream.on('finish', function () {
+                    fs.stat(dest, function (fserr, stats) {
+                        expect(fserr).toBeFalsy();
+                        expect(stats.isFile()).toBeTruthy();
+
+                        expect(stats.size > 0).toBeTruthy();
+                        done();
+                    });                    
+                });
+
+
+                writeStream.on('error', function (err) {
+                    fs.unlink(dest);
+                });
+
+                response.pipe(writeStream);
+            });
+
+        });
+
+    });
+     it("should get existing files by ids in a Zip", function (done) {
+
+        var args = {
+            username: tenant.username,
+            password: tenant.password,
+            tenant: tenant.name
+        };
+
+        var item = {          
+            ids: '1dcded01-9b17-48e3-9180-495e4ee54f39;82c88b76-83ea-44c3-9a44-a5c7217b253e;720ddf69-ae44-4b2f-9c2c-ed295ff2c8d8'
+        };
+        var dest_dir = './downloads/';
+
+        apiPostJson('login', args, function (err) {
+
+            if (!fs.existsSync(dest_dir)) {
+                fs.mkdirSync(dest_dir);
+            }
+            var options = { url: tenant.apiurl + '/GetDocuments?docIds=' + item.ids };
+            if (sessionCookies) {
+                options.headers = { 'Cookie': sessionCookies };
+            }
+
+            request.get(options).on('response', function (response) {               
+
+                var contentDispositionHeader = contentDisposition.parse(response.headers['content-disposition'].toString());
+                var file_name = contentDispositionHeader.parameters['filename'];
+               
                 var dest = dest_dir + file_name;
 
                 var writeStream = fs.createWriteStream(dest);
