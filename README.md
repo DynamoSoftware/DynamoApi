@@ -63,14 +63,22 @@ Returns item(s) that match specific template. The items are identified by one or
    
    <code>{ totalCount: 'number of items', items: 'an array of items' }</code> 
 
-Download
+GetDocument
 --------
 Returns a file for the specified document id. 
 
    * Method: GET
-   * URL: /v1/document/download?dynamoId=<code>document id</code>
+   * URL: /v1/GetDocument?id=<code>document id</code>
    * Response: the file
-   
+
+GetDocuments
+--------
+Returns a zip file for the specified document ids. 
+
+   * Method: GET
+   * URL: /v1/GetDocuments?docIds=<code>document id</code>
+   * Response: the zip file
+
 Execute Command
 --------
 Executes a command/workflow logic defined in Dynamo. 
