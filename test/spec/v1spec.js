@@ -464,7 +464,7 @@ describe("download - ", function () {
 
 });
 
-describe("Exe cute - ", function () {
+describe("Execute - ", function () {
     it("should execute workflow", function (done) {
 
         var args = {
