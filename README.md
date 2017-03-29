@@ -10,7 +10,6 @@ This project features code samples in several technologies:
 
 # Change log
 
-   * [pending] Official release is expected with the Dynamo 7.0 release.
    * Initial version
 
 # Description
