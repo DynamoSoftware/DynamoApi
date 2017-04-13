@@ -39,7 +39,7 @@ Creates or updates an item. The item is identified by the entity schema name (<c
    * Response: application/json
    
    ```json
-   { "dynamoId": "the id of the created/updated item', es: 'The type of the item" }
+   { "dynamoId": "the id of the created/updated item", "es": "The type of the item" }
    ```
 
 GetById
