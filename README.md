@@ -31,7 +31,7 @@ Performs a login into existing tenant. If the login is successful, will return a
 
 Save
 -----
-Creates or updates an item. The item is identified by <code>es</code> and <code>id</code>. The properties to be set are provided as a key/value pair.
+Creates or updates an item. The item is identified by the entity schema name (<code>es</code>) and item's identifier (<code>id</code>). The properties to be set are provided as a key/value pair.
 
    * Method: POST
    * URL: /v1/save
@@ -53,7 +53,7 @@ Returns an item with the specified entityName and dynamoId.
    * Response: application/json                      
 
    ```json
-   { "id": "the id of the requesed item', es: 'The type of the requesed item" }
+   { "id": "the id of the requesed item", "es": "The type of the requesed item" }
    ```
    and the rest of the requested property/value pairs. 
    
@@ -132,6 +132,14 @@ Error:
         "errMessage": "Exception message if any"
     }
    ```
+
+Each item found in the search results represents a matching document in Dynamo.
+If you don't see the document you need, you may not have permissions to view it.
+
+Use Id to download the document with GetDocuments.
+
+Highlights contains snippets of the document body and shows the matching search terms in &lt;em&gt; tag.
+
 
 Execute Command
 --------
