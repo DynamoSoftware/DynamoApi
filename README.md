@@ -25,7 +25,9 @@ Performs a login into existing tenant. If the login is successful, will return a
    * Body: userName=<code>username</code>&password=<code>password</code>&tenant=<code>tenant</code>
    * Response: application/json
    
-   <code>{ sidt: 'sessionToken' }</code>
+   ```json
+   { sidt: 'sessionToken' }
+   ```
 
 Save
 -----
@@ -36,7 +38,9 @@ Creates or updates an item. The item is identified by <code>es</code> and <code>
    * Body: Stringified JSON object that must contain <code>es</code> and <code>id</code> as a minimum.
    * Response: application/json
    
-   <code>{ dynamoId: 'the id of the created/updated item', es: 'The type of the item' }</code>
+   ```json
+   { dynamoId: 'the id of the created/updated item', es: 'The type of the item' }
+   ```
 
 GetById
 ----------------
@@ -48,7 +52,10 @@ Returns an item with the specified entityName and dynamoId.
    * Header: <code>x-columns</code> a comma-separated list of properties to return.
    * Response: application/json                      
 
-   <code>{ id: 'the id of the requesed item', es: 'The type of the requesed item' }</code> and the rest of the requested property/value pairs. 
+   ```json
+   { id: 'the id of the requesed item', es: 'The type of the requesed item' }
+   ```
+   and the rest of the requested property/value pairs. 
    
 GetByTemplate
 ----------------
@@ -60,7 +67,9 @@ Returns item(s) that match specific template. The items are identified by one or
    * Header: <code>x-columns</code> a comma-separated list of properties to return. 
    * Response: application/json
    
-   <code>{ totalCount: 'number of items', items: 'an array of items' }</code> 
+   ```json 
+   { totalCount: 'number of items', items: 'an array of items' }
+   ```
 
 GetDocument
 --------
@@ -78,6 +87,52 @@ Returns a zip file for the specified document ids(semicolon separated).
    * URL: /v1/GetDocuments?docIds=<code>document ids</code>
    * Response: the zip file
 
+SearchDocuments
+--------
+Returns a zip file for the specified document ids(semicolon separated). 
+
+   * Method: GET
+   * URL: /v1/SearchDocuments?query=<code>text/next token</code>
+   * Response: application/json
+      * Response is paged and contains maximum of 10 matches.
+
+Less than 10 matches:
+   ```json
+    {
+        "next": null,
+        "items": [{
+            "Id": "0000000-0000-0000-0000-000000000000",
+            "Highlights": [
+                " you at the <em>event</em>.\n\n"
+            ],
+            "Title": "Event RSVP Letter"
+        }]
+    }
+   ```
+
+More than 10 matches:
+   ```json
+    {
+        "next": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv|wxyz0123456789-_ABCDEFGHIJKLMNOPQRSTUVWXYZa",
+        "items": [{
+            "Id": "0000000-0000-0000-0000-000000000000",
+            "Highlights": [
+                " you at the <em>event</em>.\n\n"
+            ],
+            "Title": "Event RSVP Letter"
+        },
+        ...]
+    }
+   ```
+
+Error:
+   ```json
+    {
+        "err": true,
+        "errMessage": "Exception message if any"
+    }
+   ```
+
 Execute Command
 --------
 Executes a command/workflow logic defined in Dynamo. 
@@ -87,8 +142,9 @@ Executes a command/workflow logic defined in Dynamo.
    * Body: Stringified JSON object that must contain <code>commandName</code> and one or more pairs of property/value.
    * Response: application/json
    
-   <code>{ err: 'true/false', errMessage: 'Exception message if any' }</code>
-   
+   ```json
+   { err: 'true/false', errMessage: 'Exception message if any' }
+   ```
 
 # MIT License
 
