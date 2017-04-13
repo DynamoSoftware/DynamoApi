@@ -26,7 +26,7 @@ Performs a login into existing tenant. If the login is successful, will return a
    * Response: application/json
    
    ```json
-   { sidt: 'sessionToken' }
+   { "sidt": "sessionToken" }
    ```
 
 Save
@@ -39,7 +39,7 @@ Creates or updates an item. The item is identified by <code>es</code> and <code>
    * Response: application/json
    
    ```json
-   { dynamoId: 'the id of the created/updated item', es: 'The type of the item' }
+   { "dynamoId": "the id of the created/updated item', es: 'The type of the item" }
    ```
 
 GetById
@@ -53,7 +53,7 @@ Returns an item with the specified entityName and dynamoId.
    * Response: application/json                      
 
    ```json
-   { id: 'the id of the requesed item', es: 'The type of the requesed item' }
+   { "id": "the id of the requesed item', es: 'The type of the requesed item" }
    ```
    and the rest of the requested property/value pairs. 
    
@@ -68,7 +68,7 @@ Returns item(s) that match specific template. The items are identified by one or
    * Response: application/json
    
    ```json 
-   { totalCount: 'number of items', items: 'an array of items' }
+   { "totalCount": "number of items", "items": "an array of items" }
    ```
 
 GetDocument
@@ -143,7 +143,7 @@ Executes a command/workflow logic defined in Dynamo.
    * Response: application/json
    
    ```json
-   { err: 'true/false', errMessage: 'Exception message if any' }
+   { "err": "true/false", "errMessage": "Exception message if any" }
    ```
 
 # MIT License
