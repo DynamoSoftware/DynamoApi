@@ -136,9 +136,9 @@ Error:
 Each item found in the search results represents a matching document in Dynamo.
 If you don't see the document you need, you may not have permissions to view it.
 
-Use Id to download the document with GetDocuments.
+Use <code>Id</code> to download the document with GetDocuments.
 
-Highlights contains snippets of the document body and shows the matching search terms in &lt;em&gt; tag.
+<code>Highlights</code> contains snippets of the document body and shows the matching search terms in &lt;em&gt; tag.
 
 
 Execute Command
