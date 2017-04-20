@@ -94,7 +94,7 @@ namespace Dynamo.Api.Tests
                 throw new ArgumentNullException("documentIds");
 
             // Prepare url
-            string docIdsParam = String.Join(",", documentIds);
+            string docIdsParam = String.Join(";", documentIds);
             var urlBuilder = new UriBuilder(new Uri(_context.DynamoApiUrl, "GetDocuments"));
             urlBuilder.Query = String.Concat("docIds=", Uri.EscapeUriString(docIdsParam));
             Uri url = urlBuilder.Uri;
