@@ -8,10 +8,10 @@ namespace Dynamo.Api.Tests
     [TestClass]
     public class Tests
     {
-        private static readonly Uri DynamoUri = new Uri("http://localhost:65318"); // https://dynamoweb1.netagesolutions.com:6070
-        private const string UserName = "dynamoadmin@mirilpevc.com"; // dynamoadmin@skkpevc2.com
-        private const string Password = "mirilpevc.2017"; // skkpevc2.2016
-        private const string Tenant = "mirilpevc"; // skkpevc2
+        private static readonly Uri DynamoUri = new Uri("http://dynamourl.dynamosoftware.com");
+        private const string UserName = "test@test.com"; // Tenant specific username goes here
+        private const string Password = "test"; // Password
+        private const string Tenant = "yourtenant"; // Contact your Dynamo administrator to obtain the tenant name if unknown
 
         [TestMethod]
         [TestCategory("Login")]
