@@ -42,6 +42,18 @@ Creates or updates an item. The item is identified by the entity schema name (<c
    { "dynamoId": "the id of the created/updated item", "es": "The type of the item" }
    ```
 
+Delete
+-----
+Physically deletes an item. The item is identified by the entity schema name (<code>entityName</code>) and item's identifier (<code>dynamoId</code>).
+
+   * Method: DELETE
+   * URL: /v1/delete
+   * Response: application/json
+   
+   ```json
+   { "deleted": "true" }
+   ```
+
 GetById
 ----------------
 Returns an item with the specified entityName and dynamoId.
