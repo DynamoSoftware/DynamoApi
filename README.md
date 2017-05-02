@@ -48,6 +48,7 @@ Physically deletes an item. The item is identified by the entity schema name (<c
 
    * Method: DELETE
    * URL: /v1/delete
+   * Query string: entityName=<code>entityName</code>&dynamoId=<code>dynamoId</code>
    * Response: application/json
    
    ```json
