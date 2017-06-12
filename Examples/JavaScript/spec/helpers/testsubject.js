@@ -1,8 +1,8 @@
-var dynamoUrl = 'https://dynamoweb1.netagesolutions.com:6070'; 
+var dynamoUrl = 'https://dynamoweb1.netagesolutions.com:7010'; 
 var exports = module.exports = {
     url: dynamoUrl + '/new',
     apiurl: dynamoUrl + '/new/v1',
-    username: 'dynamoadmin@skkpevc2.com',
-    password: 'skkpevc2.2016',
-    name: 'skkpevc2'  
+    username: 'dynamoadmin@base_pevc.com',
+    password: 'base_pevc.2017',
+    name: 'base_pevc'  
 };

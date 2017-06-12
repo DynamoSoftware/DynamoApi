@@ -8,6 +8,16 @@ This project features code samples in several technologies:
    * JavaScript - for web pages and server-side scripting.
    * C# (.Net Framework) - for desktop tools, backend processing etc.  
 
+# How to use it
+
+```code
+git clone in a local folder
+cd DynamoAPI
+npm install jasmine
+npm install content-disposition
+jasmine --filter=test1 --stop-on-failure=true
+```
+
 # Change log
 
    * Initial version
