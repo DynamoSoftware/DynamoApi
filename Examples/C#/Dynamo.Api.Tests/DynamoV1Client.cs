@@ -120,5 +120,10 @@ namespace Dynamo.Api.Tests
             client.Headers.Add(HttpRequestHeader.ContentType, "application/json");
             return client;
         }
+
+        public void Save(Dictionary<string, string> item)
+        {
+
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,10 +9,10 @@ namespace Dynamo.Api.Tests
     [TestClass]
     public class Tests
     {
-        private static readonly Uri DynamoUri = new Uri("http://dynamourl.dynamosoftware.com");
-        private const string UserName = "test@test.com"; // Tenant specific username goes here
-        private const string Password = "test"; // Password
-        private const string Tenant = "yourtenant"; // Contact your Dynamo administrator to obtain the tenant name if unknown
+        private static readonly Uri DynamoUri = new Uri("https://dynamoweb1.netagesolutions.com:7010/");
+        private const string UserName = "dynamoadmin@trainingtenant1.com"; 
+        private const string Password = "trainingtenant1.2017"; 
+        private const string Tenant = "trainingtenant1";
 
         [TestMethod]
         [TestCategory("Login")]
@@ -56,5 +57,20 @@ namespace Dynamo.Api.Tests
 
             Assert.AreEqual(13, documentResults.Length);
         }
+
+        [TestMethod]
+        public void test_CreateContact()
+        {
+            var client = DynamoV1Client.Login(DynamoUri, UserName, Password, Tenant);
+            var client2 = DynamoV1Client.Login(DynamoUri, "opa", Password, Tenant);
+
+            var newItem = new Dictionary<string, string>();
+            newItem.Add("dynamoId", "");
+            newItem.Add("es", "");
+
+            
+        }
+
+
     }
 }

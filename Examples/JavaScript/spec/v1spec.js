@@ -7,8 +7,9 @@ const contentDisposition = require('content-disposition');
 
 var sessionCookies = null;
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
 var apiGet = function (name, args, headers, cb) {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
     if (!cb) {
         cb = headers;
@@ -536,3 +537,44 @@ trigger \n\
     });
 });
 
+describe("Playground", function () {
+
+    it("test1", function (done) {
+
+        var args = {
+            username: tenant.username,
+            password: tenant.password,
+            tenant: tenant.name
+        };
+
+        var item = {
+            es: 'Contact',
+            id: '48a052cb-b3c2-47de-9e05-bb518fe11160',
+            fullname: 'john smith'
+        };
+
+        console.log('logging in...');
+        console.log(JSON.stringify(tenant));
+
+        apiPostJson('login', args, function (err, data) {
+
+            console.log('saving item ...');
+            apiPostJson('save', item, function (err, savedData) {
+
+                if (!err) {
+                    console.log('item saved!');
+                }
+
+
+                expect(err).toBeFalsy();
+                expect(savedData[0].dynamoId).toBe(item.id);
+
+                done();
+
+            });
+
+        });
+
+    });
+
+});
