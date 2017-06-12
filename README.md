@@ -75,14 +75,66 @@ GetByTemplate
 Returns item(s) that match specific template. The items are identified by one or more property/value pairs. 
 
    * Method: GET
-   * URL: /v1/getbytemplate
+   * URL: /v1/getbytemplate?&page=<code>int|default = -1 returns all</code> 
    * Query string: Stringified JSON object that must contain one or more pairs of property/value.
    * Header: <code>x-columns</code> a comma-separated list of properties to return. 
    * Response: application/json
    
-   ```json 
-   { "totalCount": "number of items", "items": "an array of items" }
+   ```json
+   {
+        "Items": [{...}, ...],
+        "Next": text | <url to the next page>,
+        "IsLast": bool,
+        "CurrentCount": int,
+        "CurrentPage": int,
+        "TotalCount": int              
+   }
+```
+GetView
+--------
+Returns list of DynamoItems in json or zipped json.
+
+   * Method: GET
+   * URL: /v1/GetView?viewPath=<code>text/path of the view</code>&asZip=<code>bool/true|false</code>&page=<code>int/page number</code>
+   * Response: json or zipped json.
+   ```json
+   {
+        "Items": [{...}, ...],
+        "Next": text | <url to the next page>,
+        "IsLast": bool,
+        "CurrentCount": int,
+        "CurrentPage": int,
+        "TotalCount": int              
+   }
+```
+
+GetViewSQL
+--------
+Returns list of DynamoItems in json or zipped json.
+
+   * Method: GET
+   * URL: /v1/GetView?viewName=<code>text/name of the view</code>&page=<code>int/page number</code>&asZip=<code>bool/true|false</code>&orderByColumn=<code>text/column to order by</code>
+   * Response: json or zipped json.
+   ```json
+   {
+        "Items": [{...}, ...],
+        "Next": text | <url to the next page>,
+        "IsLast": bool,
+        "CurrentCount": int,
+        "CurrentPage": int,
+        "TotalCount": int              
+   }
    ```
+
+UploadFiles
+--------
+Returns a file for the specified document id. 
+
+   * Method: POST
+   * URL: /v1/UploadFiles
+   * Response: json ```{"Status"="Ok|Error", Data="<empty>|<error_message>"}```
+   * Body: multipart encoded filenames
+   * Note : be sure to specify filenames
 
 GetDocument
 --------
