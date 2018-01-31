@@ -79,7 +79,7 @@ Performs a login into existing tenant. If the login is successful, will return a
 
    * Method: POST
    * URL: /login
-   * Body: userName=<code>username</code>&password=<code>password</code>&tenant=<code>tenant</code>
+   * Query string: userName=<code>username</code>&password=<code>password</code>&tenant=<code>tenant</code>
    * Response: application/json
    
    ```json
