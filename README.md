@@ -145,8 +145,8 @@ Creates an entity of type Contact and returns the created instance.
 *   Body:
 ```json
 {
-   “FirstName”: “John”,
-   “LastName”: “Doe”
+   "FirstName": "John",
+   "LastName": "Doe"
 } 
 ```
 *   Response: application/json
@@ -162,8 +162,8 @@ Updates a Contact entity with Internal ID “00000000-0000-0000-0000-00000000000
 *   Body:
 ```json
 {
-   “FirstName”: “Rick”,
-   “LastName”: “Doe”
+   "FirstName": "Rick",
+   "LastName": "Doe"
 }
 ```
 *   Response: application/json
@@ -187,8 +187,8 @@ Relates a contact with Internal ID “00000000-0000-0000-0000-000000000000” to
 *   Body:
 ```json
 {
-   “_id1”: “00000000-0000-0000-0000-000000000001”,
-   “_id2”: “00000000-0000-0000-0000-000000000000”
+   "_id1": "00000000-0000-0000-0000-000000000001",
+   "_id2": "00000000-0000-0000-0000-000000000000"
 }
 ```
 *   Response: application/json
