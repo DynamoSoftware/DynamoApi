@@ -1,299 +1,194 @@
-# Dynamo API (v1)
+Dynamo API (v2) For Developers
+==============================
 
-This is a pubic API to Dynamo Software's Dynamo application (http://www.dynamosoftware.com/).
+This is a high-level overview of the provided pubic API to Dynamo Software’s Dynamo application.
 
-In order to use the API, you need a Dynamo account which has granted API access. Please, your administrator or Dynamo Software support for instructions how to acquire one.
+In order to use the API, you need a [Dynamo API Key](http://docs.netagesolutions.com/generate-a-dynamo-api-key/). Please, contact your Dynamo Software representative to acquire one.
 
-This project features code samples in several technologies:
-   * JavaScript - for web pages and server-side scripting.
-   * C# (.Net Framework) - for desktop tools, backend processing etc.  
+[](https://github.com/DynamoSoftware/DynamoAPI#how-to-use-it)Endpoint URIs
+--------------------------------------------------------------------------
 
-# How to use it
+All URI’s are relative to **https://api.dynamosoftware.com/api/v2.0**
 
-```code
-git clone in a local folder
-cd DynamoAPI
-npm install jasmine
-npm install content-disposition
-jasmine --filter=test1 --stop-on-failure=true
-```
+Example: **https://api.dynamosoftware.com/api/v2.0/entity**
 
-# Endpoint URIs
+[](https://github.com/DynamoSoftware/DynamoAPI#api-reference)API Reference
+--------------------------------------------------------------------------
 
-All URI's are relative to [Dynamo URL]/new/v1, unless otherwise noted.
+### [](https://github.com/DynamoSoftware/DynamoAPI#login)Authorization
 
-Example: https://d5.dynamosoftware.com/new/v1/version
+Each request needs to be sent with authorization header, which grants user access to Dynamo.
 
-# Change log
+Header:  Authorization  – Bearer <API KEY>
 
-## [1.0.0] 2016-04-27
-### Added
-- Login method.
-- Save method.
-- Delete method.
-- GetById method.
-- GetByTemplate method.
-- JavaScript samples.
-- Documentation
+[](https://github.com/DynamoSoftware/DynamoAPI#save)API Swagger
+---------------------------------------------------------------
 
-## [1.0.1] 2016-05-20    
-### Added
-- GetDocument method.
-- ExecuteCommand method.
-### Changed
-- JavaScript samples.
+You can see all production-ready Endpoints in the API Swagger:
 
-## [1.1.0] 2016-10-17    
-### Added
-- GetDocuments method.
-### Changed
-- JavaScript samples.
+[https://api.dynamosoftware.com/swagger](https://api.dynamosoftware.com/swagger)
 
-## [1.1.1] 2017-04-20    
-### Added
-- SearchDocuments method.
-- C# samples added.
-### Changed
-- JavaScript samples.
+The swagger also contains a brief explanation of the request methods, along with their parameters and response models.
 
-## [1.2.0] 2017-06-26    
-### Added
-- Delete method.
-- GetView method.
-- GetViewSQL method.
-- UploadFiles method.
-### Changed
-- GetByTemplate method modified to support paging of results.
-- JavaScript samples.
-- C# samples added.
+[](https://github.com/DynamoSoftware/DynamoAPI#delete)Usage Examples
+--------------------------------------------------------------------
 
-# Description
+### Document Upload
 
-This is a high-level overview of the provided API. For detail description of the format of the input and output arguments, please check the specific sample code provided with this project. 
+Uploads a document to Dynamo and returns the newly created document.
 
-# API Reference
-
-Login
------
-Performs a login into existing tenant. If the login is successful, will return a session token. This session token will also be assigned as a HTTP-only cookie.
-
-   * Method: POST
-   * URL: /login
-   * Query string: userName=<code>username</code>&password=<code>password</code>&tenant=<code>tenant</code>
-   * Response: application/json
-   
-   ```json
-   { "sidt": "sessionToken" }
-   ```
-
-Save
------
-Creates or updates an item. The item is identified by the entity schema name (<code>es</code>) and item's identifier (<code>id</code>). The properties to be set are provided as a key/value pair.
-
-   * Method: POST
-   * URL: /save
-   * Body: Stringified JSON object that must contain <code>es</code> and <code>id</code> as a minimum.
-   * Response: application/json
-   
-   ```json
-   { "dynamoId": "the id of the created/updated item", "es": "The type of the item" }
-   ```
-
-Delete
------
-Physically deletes an item. The item is identified by the entity schema name (<code>entityName</code>) and item's identifier (<code>dynamoId</code>).
-
-   * Method: DELETE
-   * URL: /delete
-   * Query string: entityName=<code>entityName</code>&dynamoId=<code>dynamoId</code>
-   * Response: application/json
-   
+*   Method: POST
+*   URL: /entity/Document
+*   Body: Stringified JSON object. Mind that the following properties are required: “_content”, “Extension” and “Title”.
+*   Response: application/json
 ```json
-    {
-        "deleted": "true"
-    }
+    { "_content": "the document in Base64 encoded format",
+	"Title" : "name of the document",
+	"Extension": "extension of the document"
+    } 
 ```
+### Update fields of type Multi-Select Dropdown/Search field, Multi-Select
 
-GetById
-----------------
-Returns an item with the specified entityName and dynamoId.
+Updates the values in a multi-select field and returns the updated property fields.
 
-   * Method: GET
-   * URL: /getbyid
-   * Query string: entityName=<code>entityName</code>&dynamoId=<code>dynamoId</code>
-   * Header: <code>x-columns</code> a comma-separated list of properties to return.
-   * Response: application/json                      
-
+*   Method: PUT
+*   URL: /entity/{entityName}/{id}
+*   Body: Stringified JSON object.
+*   Response: application/json
 ```json
-    {
-        "id": "the id of the requesed item",
-        "es": "The type of the requesed item"
-    }
+{ "the multi-select property name": [
+{"id" : "id of entity 1", "es": "entity schema name"},
+{"id" : "id entity 2", "es": "entity schema name"}]} 
 ```
-    
-   Followed by the rest of the requested property/value pairs. 
-   
-GetByTemplate
-----------------
-Returns item(s) that match specific template. The items are identified by one or more property/value pairs. 
+### Update fields of type Single-Select Dropdown
 
-   * Method: GET
-   * URL: /getbytemplate?&page=<code>int|default = -1 returns all</code> 
-   * Query string: Stringified JSON object that must contain one or more pairs of property/value.
-   * Header: <code>x-columns</code> a comma-separated list of properties to return. 
-   * Response: application/json
-   
+Updates the value in a single-select field and returns the updated property fields.
+
+*   Method: PUT
+*   URL: /entity/{entityName}/{id}
+*   Body: Stringified JSON object.
+*   Response: application/json
 ```json
-    {
-        "Items": [{...}, ...],
-        "Next": text | <url to the next page>,
-        "IsLast": bool,
-        "CurrentCount": int,
-        "CurrentPage": int,
-        "TotalCount": int              
-    }
+{"the single-select property name": {"id" : "id of the lookup value", "es": "lookup entity schema name"}} 
 ```
+### Advanced search via API Query
 
-GetView
---------
-Returns list of DynamoItems in json or zipped json.
+Returns the entites that match a given advanced search criteria. In the current example the search will return only Activities for which the property “Name (ID)” contains “Activity”.
 
-   * Method: GET
-   * URL: /GetView?viewPath=<code>text/path of the view</code>&asZip=<code>bool/true|false</code>&page=<code>int/page number</code>
-   * Response: json or zipped json.
+*   Method: POST
+*   URL: /search
+*   Body: Stringified JSON object that represents an advanced search criteria.
+*   Header: x-columnsa comma-separated list of properties to return.
+*   Response: application/json
 ```json
-    {
-        "Items": [{...}, ...],
-        "Next": text | <url to the next page>,
-        "IsLast": bool,
-        "CurrentCount": int,
-        "CurrentPage": int,
-        "TotalCount": int              
-    }
+{
+"advf": {
+    "e": [
+        {
+            "_name": "Activity",
+            "rule": [
+               {
+                    "_op": "all",
+                    "_prop": "Name (ID)",
+                    "values": [
+                        "Activity"
+                           ]
+                        }
+                     ]
+                 }
+             ]
+         }
+     } 
 ```
+### List All Entities
 
-GetViewSQL
---------
-Returns list of DynamoItems in json or zipped json.
+Lists all available entities in the tenant.
 
-   * Method: GET
-   * URL: /GetView?viewName=<code>text/name of the view</code>&page=<code>int/page number</code>&asZip=<code>bool/true|false</code>&orderByColumn=<code>text/column to order by</code>
-   * Response: json or zipped json.
+*   Method: GET
+*   URL: /entity
+*   Response: application/json
+
+### List All Fields
+
+Lists all fields for the Contact entity.
+
+*   Method: GET
+*   URL: /entity/Contact/Properties
+*   Response: application/json
+
+### List All Entities of Type
+
+Lists all contacts in the tenant.
+
+*   Method: GET
+*   URL: /entity/Contact?all=true
+*   Response: application/json
+
+### List All Entities of Type (specific properties)
+
+Lists all contacts in the tenant but only returns the FirstName and LastName properties.
+
+*   Method: GET
+*   URL: /entity/Contact?all=true
+*   Headers:
+    *   x-colums: FirstName, LastName
+*   Response: application/json
+
+### Create Entity
+
+Creates an entity of type Contact and returns the created instance.
+
+*   Method: POST
+*   URL: /entity/Contact
+*   Headers:
+    *   Content-Type: application/json
+*   Body:
 ```json
-    {
-        "Items": [{...}, ...],
-        "Next": text | <url to the next page>,
-        "IsLast": bool,
-        "CurrentCount": int,
-        "CurrentPage": int,
-        "TotalCount": int              
-    }
+{
+   “FirstName”: “John”,
+   “LastName”: “Doe”
+} 
 ```
+*   Response: application/json
 
-UploadFiles
---------
-Returns a file for the specified document id. 
+### Update Entity
 
-   * Method: POST
-   * URL: /UploadFiles
-   * Response: json.
+Updates a Contact entity with Internal ID “00000000-0000-0000-0000-000000000000” and returns the updated instance.
+
+*   Method: PUT
+*   URL: /entity/Contact/00000000-0000-0000-0000-000000000000
+*   Headers:
+    *   Content-Type: application/json
+*   Body:
 ```json
-    {
-        "Status"="Ok|Error",
-        Data="<empty>|<error_message>"
-    }
+{
+   “FirstName”: “Rick”,
+   “LastName”: “Doe”
+}
 ```
-   * Body: multipart encoded filenames
-   * Note: be sure to specify filenames
+*   Response: application/json
 
-GetDocument
---------
-Returns a file for the specified document id. 
+### Delete Entity
 
-   * Method: GET
-   * URL: /GetDocument?id=<code>document id</code>
-   * Response: the file
+Deletes a Contact entity with Internal ID “00000000-0000-0000-0000-000000000000”.
 
-GetDocuments
---------
-Returns a zip file for the specified document ids(semicolon separated). 
+*   Method: DELETE
+*   URL: /entity/Contact/00000000-0000-0000-0000-000000000000
+*   Response: application/json
 
-   * Method: GET
-   * URL: /GetDocuments?docIds=<code>document ids</code>
-   * Response: the zip file
+### Relate Two Entities
 
-SearchDocuments
---------
-Returns a zip file for the specified document ids(semicolon separated). 
+Relates a contact with Internal ID “00000000-0000-0000-0000-000000000000” to a company with Internal ID ”00000000-0000-0000-0000-000000000001”.
 
-   * Method: GET
-   * URL: /SearchDocuments?query=<code>text/next token</code>
-   * Response: application/json
-      * Response is paged and contains maximum of 10 matches.
-
-Less than 10 matches:
+*   Method: POST
+*   URL: /entity/Investor_Contact
+*   Headers:
+    *   Content-Type: application/json
+*   Body:
 ```json
-    {
-        "next": null,
-        "items": [{
-            "Id": "0000000-0000-0000-0000-000000000000",
-            "Highlights": [
-                " you at the <em>event</em>.\n\n"
-            ],
-            "Title": "Event RSVP Letter"
-        }]
-    }
+{
+   “_id1”: “00000000-0000-0000-0000-000000000001”,
+   “_id2”: “00000000-0000-0000-0000-000000000000”
+}
 ```
-
-More than 10 matches:
-```json
-    {
-        "next": "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuv|wxyz0123456789-_ABCDEFGHIJKLMNOPQRSTUVWXYZa",
-        "items": [{
-            "Id": "0000000-0000-0000-0000-000000000000",
-            "Highlights": [
-                " you at the <em>event</em>.\n\n"
-            ],
-            "Title": "Event RSVP Letter"
-        },
-        ...]
-    }
-```
-
-Error:
-```json
-    {
-        "err": true,
-        "errMessage": "Exception message if any"
-    }
-```
-
-Each item found in the search results represents a matching document in Dynamo.
-If you don't see the document you need, you may not have permissions to view it.
-
-Use <code>Id</code> to download the document with GetDocuments.
-
-<code>Highlights</code> contains snippets of the document body and shows the matching search terms in &lt;em&gt; tag.
-
-Execute Command
---------
-Executes a command/workflow logic defined in Dynamo. 
-
-   * Method: POST
-   * URL: /executecommand
-   * Body: Stringified JSON object that must contain <code>commandName</code> and one or more pairs of property/value.
-   * Response: application/json
-   
-   ```json
-   { "err": "true/false", "errMessage": "Exception message if any" }
-   ```
-
-# MIT License
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-No conditions.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-
+*   Response: application/json
