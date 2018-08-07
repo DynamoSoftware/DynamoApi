@@ -19,7 +19,7 @@ Example: **https://api.dynamosoftware.com/api/v2.0/entity**
 
 Each request needs to be sent with authorization header, which grants user access to Dynamo.
 
-Header:  Authorization  – Bearer <API KEY>
+Header:  Authorization  – Bearer 'API KEY'
 
 [](https://github.com/DynamoSoftware/DynamoAPI#save)API Swagger
 ---------------------------------------------------------------
