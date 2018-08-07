@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoApiClient", "DynamoApiClient\DynamoApiClient.csproj", "{2F2D8013-1DBE-4D6E-A7A0-24F1818253F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoAPIv2.Console", "DynamoAPIv2.Console\DynamoAPIv2.Console.csproj", "{9409A306-E888-4859-ABFF-32D297FAB24D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2F2D8013-1DBE-4D6E-A7A0-24F1818253F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F2D8013-1DBE-4D6E-A7A0-24F1818253F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F2D8013-1DBE-4D6E-A7A0-24F1818253F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F2D8013-1DBE-4D6E-A7A0-24F1818253F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9409A306-E888-4859-ABFF-32D297FAB24D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9409A306-E888-4859-ABFF-32D297FAB24D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9409A306-E888-4859-ABFF-32D297FAB24D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9409A306-E888-4859-ABFF-32D297FAB24D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4495E4C6-4D42-4962-A7CC-A2BB1C3D88D4}
+	EndGlobalSection
+EndGlobal
