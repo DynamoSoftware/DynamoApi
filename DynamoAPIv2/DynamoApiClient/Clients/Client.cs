@@ -108,6 +108,19 @@ namespace DynamoApiClient.Clients
             return response.Data;
         }
 
+        public ItemResponse GetEntityItemById(string entityName, string id, params string[] propertiesToRetrieve)
+        {
+            var request = new RestRequest("Entity/{entityName}/{id}", Method.GET);
+            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+            request.AddParameter("id", id, ParameterType.UrlSegment);
+            request.AddHeader("Cache-Control", "no-cache");
+            request.AddHeader("Authorization", $"Bearer {_apiKey}");
+            if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
+                request.AddHeader("x-columns", String.Join(";", propertiesToRetrieve));
+            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
+            return response.Data;
+        }
+
         public ItemListResponse GetAllEntityItems(string entityName, params string[] propertiesToRetrieve)
         {
             var request = new RestRequest("Entity/{entityName}", Method.GET);
@@ -179,6 +192,18 @@ namespace DynamoApiClient.Clients
             var request = new RestRequest("Entity/{entityName}/{id}", Method.PUT);
             request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
             request.AddParameter("id", id.ToString("N"), ParameterType.UrlSegment);
+            request.AddHeader("Cache-Control", "no-cache");
+            request.AddHeader("Authorization", $"Bearer {_apiKey}");
+            request.AddJsonBody(item);
+            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
+            return response.Data;
+        }
+
+        public ItemResponse UpdateEntityItem(string entityName, string id, IDictionary<string, object> item)
+        {
+            var request = new RestRequest("Entity/{entityName}/{id}", Method.PUT);
+            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+            request.AddParameter("id", id, ParameterType.UrlSegment);
             request.AddHeader("Cache-Control", "no-cache");
             request.AddHeader("Authorization", $"Bearer {_apiKey}");
             request.AddJsonBody(item);

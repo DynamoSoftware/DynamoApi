@@ -36,6 +36,9 @@ namespace DynamoApiClient.Endpoints
 
         public long Total => _client.GetAllEntityItemsCount(Name);
 
+        public IDictionary<string, object> this[string id] =>
+            _client.GetEntityItemById(Name, id, _propertiesToRetrieve).ThrowIfErrorResponse().Data;
+
         public IDictionary<string, object> this[Guid id] =>
             _client.GetEntityItemById(Name, id, _propertiesToRetrieve).ThrowIfErrorResponse().Data;
 
@@ -55,6 +58,11 @@ namespace DynamoApiClient.Endpoints
         }
 
         public IDictionary<string, object> Update(Guid id, IDictionary<string, object> item)
+        {
+            return _client.UpdateEntityItem(Name, id, item).ThrowIfErrorResponse().Data;
+        }
+
+        public IDictionary<string, object> Update(string id, IDictionary<string, object> item)
         {
             return _client.UpdateEntityItem(Name, id, item).ThrowIfErrorResponse().Data;
         }
