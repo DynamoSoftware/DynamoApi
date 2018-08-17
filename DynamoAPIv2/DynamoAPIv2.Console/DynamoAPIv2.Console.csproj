@@ -48,5 +48,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DynamoApiClient\DynamoApiClient.csproj">
+      <Project>{2f2d8013-1dbe-4d6e-a7a0-24f1818253f8}</Project>
+      <Name>DynamoApiClient</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
