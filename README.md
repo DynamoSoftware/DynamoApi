@@ -42,10 +42,11 @@ Uploads a document to Dynamo and returns the newly created document.
 *   Body: Stringified JSON object. Mind that the following properties are required: “_content”, “Extension” and “Title”.
 *   Response: application/json
 ```json
-    { "_content": "the document in Base64 encoded format",
-	"Title" : "name of the document",
-	"Extension": "extension of the document"
-    } 
+{
+    "_content": "the document in Base64 encoded format",
+    "Title": "name of the document",
+    "Extension": "extension of the document"
+}
 ```
 ### Update fields of type Multi-Select Dropdown/Search field, Multi-Select
 
@@ -56,9 +57,18 @@ Updates the values in a multi-select field and returns the updated property fiel
 *   Body: Stringified JSON object.
 *   Response: application/json
 ```json
-{ "the multi-select property name": [
-{"id" : "id of entity 1", "es": "entity schema name"},
-{"id" : "id entity 2", "es": "entity schema name"}]} 
+{
+    "the multi-select property name": [
+        {
+            "id": "id of entity 1",
+            "es": "entity schema name"
+        },
+        {
+            "id": "id entity 2",
+            "es": "entity schema name"
+        }
+    ]
+}
 ```
 ### Update fields of type Single-Select Dropdown
 
@@ -69,7 +79,12 @@ Updates the value in a single-select field and returns the updated property fiel
 *   Body: Stringified JSON object.
 *   Response: application/json
 ```json
-{"the single-select property name": {"id" : "id of the lookup value", "es": "lookup entity schema name"}} 
+{
+    "the single-select property name": {
+        "id": "id of the lookup value",
+        "es": "lookup entity schema name"
+    }
+}
 ```
 ### Advanced search via API Query
 
@@ -82,23 +97,23 @@ Returns the entites that match a given advanced search criteria. In the current 
 *   Response: application/json
 ```json
 {
-"advf": {
-    "e": [
-        {
-            "_name": "Activity",
-            "rule": [
-               {
-                    "_op": "all",
-                    "_prop": "Name (ID)",
-                    "values": [
-                        "Activity"
-                           ]
-                        }
-                     ]
-                 }
-             ]
-         }
-     } 
+    "advf": {
+        "e": [
+            {
+                "_name": "Activity",
+                "rule": [
+                    {
+                        "_op": "all",
+                        "_prop": "Name (ID)",
+                        "values": [
+                            "Activity"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
 ```
 ### List All Entities
 
@@ -189,6 +204,61 @@ Relates a contact with Internal ID “00000000-0000-0000-0000-000000000000” to
 {
    "_id1": "00000000-0000-0000-0000-000000000001",
    "_id2": "00000000-0000-0000-0000-000000000000"
+}
+```
+*   Response: application/json
+
+### Relate Two Entities with Roles
+
+Relates a contact with Internal ID “00000000-0000-0000-0000-000000000000” to a company with Internal ID ”00000000-0000-0000-0000-000000000001”. Assigns two roles to the relation with Internal ID's “00000000-0000-0000-0000-000000000002” and “00000000-0000-0000-0000-000000000003”.
+
+*   Method: POST
+*   URL: /entity/Investor_Contact
+*   Headers:
+    *   Content-Type: application/json
+*   Body:
+```json
+{
+    "_id1": "00000000-0000-0000-0000-000000000001",
+    "_id2": "00000000-0000-0000-0000-000000000000",
+    "Roles": [
+        {
+            "es": "Roles",
+            "id": "00000000-0000-0000-0000-000000000002"
+        },
+        {
+            "es": "Roles",
+            "id": "00000000-0000-0000-0000-000000000003"
+        }
+    ]
+}
+```
+*   Response: application/json
+
+### Delete a Relation
+
+Deletes a relation with Relation ID “00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000001,2”.
+
+*   Method: DELETE
+*   URL: /entity/Investor_Contact/00000000-0000-0000-0000-000000000000,00000000-0000-0000-0000-000000000001,2
+*   Headers:
+    *   Content-Type: application/json
+*   Response: application/json
+
+### Create Triple Relation
+
+Relates a contact with Internal ID “00000000-0000-0000-0000-000000000000” to a company with Internal ID ”00000000-0000-0000-0000-000000000001” to a Role with Internal ID “00000000-0000-0000-0000-000000000002”.
+
+*   Method: POST
+*   URL: /entity/Investor_Contact_Roles
+*   Headers:
+    *   Content-Type: application/json
+*   Body:
+```json
+{
+   "_id1": "00000000-0000-0000-0000-000000000001",
+   "_id2": "00000000-0000-0000-0000-000000000000",
+   "_id3": "00000000-0000-0000-0000-000000000002"
 }
 ```
 *   Response: application/json
