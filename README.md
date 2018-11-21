@@ -5,6 +5,8 @@ This is a high-level overview of the provided pubic API to Dynamo Software’s D
 
 In order to use the API, you need a [Dynamo API Key](http://docs.netagesolutions.com/generate-a-dynamo-api-key/). Please, contact your Dynamo Software representative to acquire one.
 
+You must have working knowledge of Dynamo, especially entities, fields and relationships before attempting to utilize the API. Consult the product documentation.
+
 [](https://github.com/DynamoSoftware/DynamoAPI#how-to-use-it)Endpoint URIs
 --------------------------------------------------------------------------
 
