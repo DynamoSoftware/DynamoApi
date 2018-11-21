@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using DynamoApiClient.Extensions;
 using DynamoApiClient.Models;
 using Newtonsoft.Json;
 using RestSharp;
@@ -11,9 +12,9 @@ namespace DynamoApiClient.Clients
 {
     public class Client
     {
-        private class JsonDeserializer : IDeserializer
+        private class JsonNetDeserializer : IDeserializer
         {
-            public JsonDeserializer()
+            public JsonNetDeserializer()
             {
                 Culture = CultureInfo.InvariantCulture;
             }
@@ -38,235 +39,178 @@ namespace DynamoApiClient.Clients
         private readonly string _apiKey;
         private readonly RestClient _client;
 
-        public static TApiResponse PlaceGetRequest<TApiResponse>(string apiUrl, string apiKey) where TApiResponse : ApiResponse, new()
+        public bool DisableCache { get; set; }
+
+        public static ApiCallResponse<TApiResponse> PlaceGetRequest<TApiResponse>(string apiUrl, string apiKey) where TApiResponse : ApiResponse, new()
         {
             var client = new RestClient(apiUrl);
+            client.AddHandler("application/json", new JsonNetDeserializer());
             var request = new RestRequest("", Method.GET);
             request.AddHeader("Cache-Control", "no-cache");
             request.AddHeader("Authorization", $"Bearer {apiKey}");
             IRestResponse<TApiResponse> response = client.Execute<TApiResponse>(request);
-            return response.Data;
+            return response.ToApiCallResponse(client);
         }
 
-        public Client(string apiKey, string apiUrl = "http://localhost:51516/api/v2.0/")
+        public Client(string apiKey, string apiUrl = "https://api.dynamosoftware.com/api/v2.0/")
         {
             _apiKey = apiKey;
             _client = new RestClient(apiUrl);
-            _client.AddHandler("application/json", new JsonDeserializer());
+            _client.AddHandler("application/json", new JsonNetDeserializer());
         }
 
-        internal TApiResponse PlaceGetRequest<TApiResponse>(string url) where TApiResponse : ApiResponse, new()
+        internal ApiCallResponse<TApiResponse> PlaceRequest<TApiResponse>(string url,
+            Method method = Method.GET,
+            Action<RestRequest> modify = null)
+            where TApiResponse : ApiResponse, new()
         {
-            var request = new RestRequest(url, Method.GET);
-            request.AddHeader("Cache-Control", "no-cache");
+            var request = new RestRequest(url, method);
             request.AddHeader("Authorization", $"Bearer {_apiKey}");
+
+            if (DisableCache)
+            {
+                request.AddHeader("Cache-Control", "no-cache");
+            }
+
+            modify?.Invoke(request);
+
             IRestResponse<TApiResponse> response = _client.Execute<TApiResponse>(request);
-            return response.Data;
+            return response.ToApiCallResponse(_client);
         }
 
-        public ListResponse GetEntities()
+        public ApiCallResponse<StringListResponse> GetEntities()
         {
-            var request = new RestRequest("Entity", Method.GET);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ListResponse> response = _client.Execute<ListResponse>(request);
-            return response.Data;
+            return PlaceRequest<StringListResponse>("Entity");
         }
 
-        public long GetAllEntityItemsCount(string entityName)
+        public ApiCallResponse<TotalResponse> GetAllEntityItemsCount(string entityName)
         {
-            var request = new RestRequest("Entity/{entityName}/total", Method.GET);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return (long)(response.Data.Data["total"]);
+            return PlaceRequest<TotalResponse>("Entity/{entityName}/total", modify: request =>
+            {
+                request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+            });
         }
 
-        public ItemsPage GetEntityItems(string entityName, params string[] propertiesToRetrieve)
+        public ApiCallResponse<DynamoItemListResponse> GetEntityItems(string entityName, params string[] propertiesToRetrieve)
         {
-            var request = new RestRequest("Entity/{entityName}", Method.GET);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
-                request.AddHeader("x-columns", String.Join(";", propertiesToRetrieve));
-            IRestResponse<ItemListResponse> response = _client.Execute<ItemListResponse>(request);
-            return new ItemsPage(this, response.Data);
+            return PlaceRequest<DynamoItemListResponse>("Entity/{entityName}", modify: request =>
+            {
+                request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+                if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
+                    request.AddHeader("x-columns", String.Join(";", propertiesToRetrieve));
+            });
         }
 
-        public ItemResponse GetEntityItemById(string entityName, Guid id, params string[] propertiesToRetrieve)
+        public ApiCallResponse<DynamoItemResponse> GetEntityItemById(string entityName, string id, params string[] propertiesToRetrieve)
         {
-            var request = new RestRequest("Entity/{entityName}/{id}", Method.GET);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddParameter("id", id.ToString("N"), ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
-                request.AddHeader("x-columns", String.Join(";", propertiesToRetrieve));
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
+            return PlaceRequest<DynamoItemResponse>("Entity/{entityName}/{id}", modify: request =>
+            {
+                request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+                request.AddParameter("id", id, ParameterType.UrlSegment);
+                if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
+                    request.AddHeader("x-columns", String.Join(";", propertiesToRetrieve));
+            });
         }
 
-        public ItemResponse GetEntityItemById(string entityName, string id, params string[] propertiesToRetrieve)
+        public ApiCallResponse<DynamoItemListResponse> GetAllEntityItems(string entityName, params string[] propertiesToRetrieve)
         {
-            var request = new RestRequest("Entity/{entityName}/{id}", Method.GET);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddParameter("id", id, ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
-                request.AddHeader("x-columns", String.Join(";", propertiesToRetrieve));
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
+            return PlaceRequest<DynamoItemListResponse>("Entity/{entityName}", modify: request =>
+            {
+                request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+                request.AddQueryParameter("all", "true");
+                if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
+                    request.AddHeader("x-columns", String.Join(";", propertiesToRetrieve));
+            });
         }
 
-        public ItemListResponse GetAllEntityItems(string entityName, params string[] propertiesToRetrieve)
+        public ApiCallResponse<ItemResponse> GetEntityProperties(string entityName)
         {
-            var request = new RestRequest("Entity/{entityName}", Method.GET);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddQueryParameter("all", "true");
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
-                request.AddHeader("x-columns", String.Join(";", propertiesToRetrieve));
-            IRestResponse<ItemListResponse> response = _client.Execute<ItemListResponse>(request);
-            return response.Data;
+            return PlaceRequest<ItemResponse>("Entity/{entityName}/properties", modify: request =>
+            {
+                request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+            });
         }
 
-        public ItemResponse GetEntityProperties(string entityName)
+        public ApiCallResponse<SchemaResponse> GetEntitySchema(string entityName)
         {
-            var request = new RestRequest("Entity/{entityName}/properties", Method.GET);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
+            return PlaceRequest<SchemaResponse>("Entity/{entityName}/schema", modify: request =>
+            {
+                request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+            });
         }
 
-        public ItemResponse GetEntitySchema(string entityName)
+        public ApiCallResponse<ItemResponse> DeleteEntityItem(string entityName, string id)
         {
-            var request = new RestRequest("Entity/{entityName}/schema", Method.GET);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
+            return PlaceRequest<ItemResponse>("Entity/{entityName}/{id}", Method.DELETE, modify: request =>
+            {
+                request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+                request.AddParameter("id", id, ParameterType.UrlSegment);
+            });
         }
 
-        public ItemResponse DeleteEntityItem(string entityName, Guid id)
+        public ApiCallResponse<DynamoItemResponse> InsertEntityItem(string entityName, IDictionary<string, object> item)
         {
-            var request = new RestRequest("Entity/{entityName}/{id}", Method.DELETE);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddParameter("id", id.ToString("N"), ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
+            return PlaceRequest<DynamoItemResponse>("Entity/{entityName}", Method.POST, modify: request =>
+            {
+                request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+                request.AddJsonBody(item);
+            });
         }
 
-        public ItemResponse DeleteEntityItem(string entityName, string id)
+        public ApiCallResponse<DynamoItemResponse> UpdateEntityItem(string entityName, string id, IDictionary<string, object> item)
         {
-            var request = new RestRequest("Entity/{entityName}/{id}", Method.DELETE);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddParameter("id", id, ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
+            return PlaceRequest<DynamoItemResponse>("Entity/{entityName}/{id}", Method.PUT, modify: request =>
+            {
+                request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
+                request.AddParameter("id", id, ParameterType.UrlSegment);
+                request.AddJsonBody(item);
+            });
         }
 
-        public ItemResponse InsertEntityItem(string entityName, IDictionary<string, object> item)
+        public ApiCallResponse<ItemListResponse> GetViews()
         {
-            var request = new RestRequest("Entity/{entityName}", Method.POST);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            request.AddJsonBody(item);
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
+            return PlaceRequest<ItemListResponse>("View");
         }
 
-        public ItemResponse UpdateEntityItem(string entityName, Guid id, IDictionary<string, object> item)
+        public ApiCallResponse<DynamoItemListResponse> GetAllViewItems(string path)
         {
-            var request = new RestRequest("Entity/{entityName}/{id}", Method.PUT);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddParameter("id", id.ToString("N"), ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            request.AddJsonBody(item);
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
+            return PlaceRequest<DynamoItemListResponse>($"View/{path}");
         }
 
-        public ItemResponse UpdateEntityItem(string entityName, string id, IDictionary<string, object> item)
+        public ApiCallResponse<ItemListResponse> GetAllSqlViewItems(string name)
         {
-            var request = new RestRequest("Entity/{entityName}/{id}", Method.PUT);
-            request.AddParameter("entityName", entityName, ParameterType.UrlSegment);
-            request.AddParameter("id", id, ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            request.AddJsonBody(item);
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
+            return PlaceRequest<ItemListResponse>("View/sql/{name}", modify: request =>
+            {
+                request.AddParameter("name", name, ParameterType.UrlSegment);
+            });
         }
 
-        public ItemListResponse GetViews()
+        public ApiCallResponse<ItemResponse> Reset()
         {
-            var request = new RestRequest("View", Method.GET);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemListResponse> response = _client.Execute<ItemListResponse>(request);
-            return response.Data;
+            return PlaceRequest<ItemResponse>("Reset", Method.PUT);
         }
 
-        public ItemListResponse GetAllViewItems(string path)
+        public ApiCallResponse<ItemResponse> GetVersion()
         {
-            var request = new RestRequest($"View/{path}", Method.GET);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemListResponse> response = _client.Execute<ItemListResponse>(request);
-            return response.Data;
+            return PlaceRequest<ItemResponse>("../Version");
         }
 
-        public ItemListResponse GetAllSqlViewItems(string name)
+        public ApiCallResponse<DynamoItemListResponse> MakeSearch(object advf, TimeSpan? utcOffset = null, bool all = false, params string[] propertiesToRetrieve)
         {
-            var request = new RestRequest("View/sql/{name}", Method.GET);
-            request.AddParameter("name", name, ParameterType.UrlSegment);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemListResponse> response = _client.Execute<ItemListResponse>(request);
-            return response.Data;
-        }
+            return PlaceRequest<DynamoItemListResponse>("Search", Method.POST, modify: request =>
+            {
+                request.AddQueryParameter("all", all.ToString(CultureInfo.InvariantCulture));
+                request.AddQueryParameter("utcOffset", utcOffset?.TotalHours.ToString(CultureInfo.InvariantCulture) ?? "0");
 
-        public ItemResponse Reset()
-        {
-            var request = new RestRequest("reset", Method.PUT);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
-        }
+                if (!(advf is string))
+                {
+                    advf = JsonConvert.SerializeObject(advf);
+                }
 
-        public ItemResponse GetVersion()
-        {
-            var request = new RestRequest("../version", Method.GET);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            IRestResponse<ItemResponse> response = _client.Execute<ItemResponse>(request);
-            return response.Data;
-        }
-        public ItemListResponse MakeSearch(IDictionary<string, object> item, params string[] propertiesToRetrieve)
-        {
-            var request = new RestRequest("search", Method.POST);
-            request.AddHeader("Cache-Control", "no-cache");
-            request.AddHeader("Authorization", $"Bearer {_apiKey}");
-            request.AddQueryParameter("all", "true");
-            request.AddJsonBody(item);
-            if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
-                request.AddHeader("x-columns", String.Join(";", propertiesToRetrieve));
-            IRestResponse<ItemListResponse> response = _client.Execute<ItemListResponse>(request);
-            return response.Data;
+                request.AddParameter("application/json", advf, ParameterType.RequestBody);
+                if (propertiesToRetrieve != null && propertiesToRetrieve.Any())
+                    request.AddHeader("x-columns", string.Join(";", propertiesToRetrieve));
+            });
         }
     }
 }

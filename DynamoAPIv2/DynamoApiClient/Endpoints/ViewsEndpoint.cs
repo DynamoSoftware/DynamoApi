@@ -2,6 +2,7 @@
 using System.Linq;
 using DynamoApiClient.Clients;
 using DynamoApiClient.Extensions;
+using DynamoApiClient.Models;
 
 namespace DynamoApiClient.Endpoints
 {
@@ -14,7 +15,7 @@ namespace DynamoApiClient.Endpoints
             _client = client;
         }
 
-        public IEnumerable<IDictionary<string, object>> this[string viewPath] =>
+        public IEnumerable<DynamoItem> this[string viewPath] =>
             _client.GetAllViewItems(viewPath).ThrowIfErrorResponse().Data;
 
         public IEnumerable<ViewEndpoint> All =>
