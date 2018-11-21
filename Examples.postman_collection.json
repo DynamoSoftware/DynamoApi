@@ -1,0 +1,362 @@
+{
+	"info": {
+		"_postman_id": "a406357a-4232-4a74-8561-532dc68beeaf",
+		"name": "Examples",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Entities - List All",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "YOUR_KEY_GOES_HERE",
+						"disabled": false
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.dynamosoftware.com/api/v2.0/entity",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dynamosoftware",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2.0",
+						"entity"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Document - Schema",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "YOUR_KEY_GOES_HERE"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.dynamosoftware.com/api/v2.0/entity/Document/schema",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dynamosoftware",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2.0",
+						"entity",
+						"Document",
+						"schema"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Document Categories - List All",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "YOUR_KEY_GOES_HERE"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.dynamosoftware.com/api/v2.0/entity/L_Document_categories",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dynamosoftware",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2.0",
+						"entity",
+						"L_Document_categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Document Status - List All",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "YOUR_KEY_GOES_HERE"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.dynamosoftware.com/api/v2.0/entity/L_DocumentStatus",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dynamosoftware",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2.0",
+						"entity",
+						"L_DocumentStatus"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tag - List All",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "YOUR_KEY_GOES_HERE"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.dynamosoftware.com/api/v2.0/entity/Tag",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dynamosoftware",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2.0",
+						"entity",
+						"Tag"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Document - Create",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "YOUR_KEY_GOES_HERE"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n   \"_content\":\"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\",\r\n   \"Title\":\"My Test Image\",\r\n   \"Filename\":\"My Test Image.jpg\",\r\n   \"Extension\":\".jpg\",\r\n   \"Documentcategories\":[  \r\n       {  \r\n         \"id\":\"6bcdc2e4-50a3-4825-a51c-451c63d7ff3c\",\r\n         \"es\":\"L_Document_categories\"\r\n       }\r\n   ],\r\n   \"DocumentStatus\":  \r\n       {  \r\n         \"id\":\"d7d98f1f-3da7-4bb0-b67b-d456370e247e\",\r\n         \"es\":\"L_DocumentStatus\"\r\n       }\r\n}"
+				},
+				"url": {
+					"raw": "https://api.dynamosoftware.com/api/v2.0/entity/Document/",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dynamosoftware",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2.0",
+						"entity",
+						"Document",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activity - List All",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "YOUR_KEY_GOES_HERE"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.dynamosoftware.com/api/v2.0/entity/Activity/",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dynamosoftware",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2.0",
+						"entity",
+						"Activity",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activity - Get by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "YOUR_KEY_GOES_HERE"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.dynamosoftware.com/api/v2.0/entity/Activity/b039689e-bf99-49e4-8bb2-f663b3fcf582/",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dynamosoftware",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2.0",
+						"entity",
+						"Activity",
+						"b039689e-bf99-49e4-8bb2-f663b3fcf582",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Document - Relate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "YOUR_KEY_GOES_HERE"
+					},
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Notes",
+						"value": "Relations must be built only between primary entities, which can be related to begin with",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \r\n   \r\n   \"_id1\":\"96d4f03b-8a9b-46ec-8ea8-1b55c49e9565\",\r\n   \"_id2\":\"b039689e-bf99-49e4-8bb2-f663b3fcf582\",\r\n   \r\n}"
+				},
+				"url": {
+					"raw": "https://api.dynamosoftware.com/api/v2.0/entity/Document_Activity/",
+					"protocol": "https",
+					"host": [
+						"api",
+						"dynamosoftware",
+						"com"
+					],
+					"path": [
+						"api",
+						"v2.0",
+						"entity",
+						"Document_Activity",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
