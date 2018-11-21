@@ -13,7 +13,7 @@ namespace DynamoApiClient.Clients
             LowLevelClient = lowLevelClient;
         }
 
-        public FluentClient(string apiKey, string apiUrl = "http://localhost:51516/api/")
+        public FluentClient(string apiKey, string apiUrl = "https://api.dynamosoftware.com/api/v2.0/")
         {
             LowLevelClient = new Client(apiKey, apiUrl);
         }
@@ -27,9 +27,14 @@ namespace DynamoApiClient.Clients
             .ThrowIfErrorResponse()
             .Data;
 
+        public SearchEndpoint Search(object advf, params string[] propertyNames)
+        {
+            return new SearchEndpoint(LowLevelClient, advf, propertyNames);
+        }
+
         public bool Reset()
         {
-            return LowLevelClient.Reset().Success;
+            return LowLevelClient.Reset().Data.Success;
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DynamoApiClient.Models
 {
-    public class ItemListResponse : TypedResponse<Item[]>
+    public class DynamoItemListResponse : TypedResponse<DynamoItem[]>
     {
         [JsonProperty("total")]
         public long? Total { get; set; }

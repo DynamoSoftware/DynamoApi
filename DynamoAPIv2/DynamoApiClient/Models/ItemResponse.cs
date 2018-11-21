@@ -1,11 +1,6 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
-
-namespace DynamoApiClient.Models
+﻿namespace DynamoApiClient.Models
 {
-    public class ItemResponse : ApiResponse
+    public class ItemResponse : TypedResponse<Item>
     {
-        [JsonProperty("data")]
-        public IDictionary<string, object> Data { get; set; }
     }
 }
