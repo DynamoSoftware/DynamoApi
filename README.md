@@ -32,6 +32,8 @@ You can see all production-ready Endpoints in the API Swagger:
 
 The swagger also contains a brief explanation of the request methods, along with their parameters and response models.
 
+For those lazy readers out there we've created a Postman collection with examples of most endpoints. Please refer to 'Examples.postman_collection.json'.
+
 [](https://github.com/DynamoSoftware/DynamoAPI#delete)Usage Examples
 --------------------------------------------------------------------
 
