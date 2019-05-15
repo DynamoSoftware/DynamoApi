@@ -1,7 +1,7 @@
 Dynamo API (v2) For Developers
 ==============================
 
-This is a high-level overview of the provided pubic API to Dynamo Software’s Dynamo application.
+This is a high-level overview of the provided public API to Dynamo Software’s Dynamo application.
 
 In order to use the API, you need a [Dynamo API Key](http://docs.netagesolutions.com/generate-a-dynamo-api-key/). Please, contact your Dynamo Software representative to acquire one.
 
